@@ -1,4 +1,4 @@
-cfs
+Splash
 ===
 
-Creative scripting CoffeeScript starter kit
+coffeescript hmtl5 canvas minimal framework

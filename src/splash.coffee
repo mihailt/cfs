@@ -26,6 +26,7 @@ do ->
 class Keyboard
 	constructor:->
 		@pressed = {}
+		@down = {}
 		@released = {}
 		@map =
 			8: 'backspace',
@@ -39,7 +40,7 @@ class Keyboard
 			39: 'right',
 			40: 'down'
 		for k, v of @map
-			@pressed[k] = @pressed[v] = @released[k] = @released[v] = false
+			@down[k] = @down[v] = @pressed[k] = @pressed[v] = @released[k] = @released[v] = false
 		for e in ['keyup', 'keydown']
 			document.addEventListener(e, @handler, false)
 	name: (code)->
@@ -48,22 +49,26 @@ class Keyboard
 		code = event.keyCode
 		key = @name code
 		@pressed[code] = @pressed[key] = (event.type == 'keydown')
+		@down[code] = @down[key] = (event.type == 'keydown')
 		@released[code] = @released[key] = (event.type == 'keyup')
 	clear:->
+		@pressed = {}
 		@released = {}
 
 class Mouse
 	constructor:(@element)->
 		@x = @y = @px = @py = 0
 		@pressed = {}
+		@down = {}
 		@released = {}
+		@clicked = {}
 		for b in ['left', 'middle', 'right']
-			@pressed[b] = @released[b] = false
+			@pressed[b] = @down[b] = @released[b] = @clicked[b] = false
 		@map =
 			0: 'left',
 			1: 'middle',
 			2: 'right'
-		for e in ['mousemove', 'mousedown', 'mouseup', 'contextmenu']
+		for e in ['click', 'mousemove', 'mousedown', 'mouseup', 'contextmenu']
 			@element.addEventListener(e, @handler, false)
 	name: (code)->
 		@map[code]
@@ -77,13 +82,17 @@ class Mouse
 		@y = event.pageY - bounds.top - window.scrollY;
 		@px = tmpx || @x
 		@py = tmpy || @y
-		if event.type in ['mousedown', 'mouseup']
+		if event.type in ['mousedown', 'mouseup', 'click']
 			code = event.button
 			key = @name code
 			@pressed[code] = @pressed[key] = (event.type == 'mousedown')
+			@down[code] = @down[key] = (event.type == 'mousedown')
 			@released[code] = @released[key] = (event.type == 'mouseup')
+			@clicked[code] = @clicked[key] = (event.type == 'click')
 	clear:->
+		@pressed = {}
 		@released = {}
+		@clicked = {}
 
 
 class App

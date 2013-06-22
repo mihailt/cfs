@@ -26,7 +26,6 @@ do ->
 class Keyboard
 	constructor:->
 		@pressed = {}
-		@down = {}
 		@released = {}
 		@map =
 			8: 'backspace',
@@ -40,7 +39,7 @@ class Keyboard
 			39: 'right',
 			40: 'down'
 		for k, v of @map
-			@down[k] = @down[v] = @pressed[k] = @pressed[v] = @released[k] = @released[v] = false
+			@pressed[k] = @pressed[v] = @released[k] = @released[v] = false
 		for e in ['keyup', 'keydown']
 			document.addEventListener(e, @handler, false)
 	name: (code)->
@@ -49,10 +48,8 @@ class Keyboard
 		code = event.keyCode
 		key = @name code
 		@pressed[code] = @pressed[key] = (event.type == 'keydown')
-		@down[code] = @down[key] = (event.type == 'keydown')
 		@released[code] = @released[key] = (event.type == 'keyup')
 	clear:->
-		@pressed = {}
 		@released = {}
 
 class Mouse
